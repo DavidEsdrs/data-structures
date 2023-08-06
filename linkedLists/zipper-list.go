@@ -16,5 +16,5 @@ func ZipperList[T any](a *LinkedList[T], b *LinkedList[T]) *LinkedList[T] {
 		}
 		aTurn = !aTurn
 	}
-	return ll
+	return &ll
 }

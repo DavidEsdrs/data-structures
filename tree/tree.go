@@ -16,7 +16,7 @@ type Tree[T any] struct {
 }
 
 func (t *Tree[Y]) InDepthTraversal() []*Node[Y] {
-	stack := stack.Stack[Node[Y]]{}
+	stack := stack.Stack[*Node[Y]]{}
 	res := []*Node[Y]{}
 	stack.Push(t.Root)
 	for stack.Size > 0 {
@@ -53,16 +53,16 @@ func recurse[T any](n *Node[T]) []*Node[T] {
 func (t *Tree[Y]) BreadthFirstTraversal() []*Node[Y] {
 	queue := queue.Queue[Node[Y]]{}
 	res := []*Node[Y]{}
-	queue.Unshift(t.Root)
+	queue.Push(*t.Root)
 	for queue.Size > 0 {
 		current := queue.Shift()
-		res = append(res, current)
+		res = append(res, &current)
 		println(current.Value)
 		if current.Left != nil {
-			queue.Unshift(current.Left)
+			queue.Push(*current.Left)
 		}
 		if current.Right != nil {
-			queue.Unshift(current.Right)
+			queue.Push(*current.Right)
 		}
 	}
 	return res
@@ -109,5 +109,5 @@ func Execute() {
 
 	t := Tree[int]{Root: &g}
 
-	println(Height(t.Root))
+	t.BreadthFirstTraversal()
 }

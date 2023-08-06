@@ -4,17 +4,17 @@ import "github.com/DavidEsdrs/ads/queue"
 
 func TreeInclude(t *Tree[string], target string) bool {
 	queue := queue.Queue[*Node[string]]{}
-	queue.Unshift(&t.Root)
+	queue.Push(t.Root)
 	for queue.Size > 0 {
 		current := *queue.Shift()
 		if current.Value == target {
 			return true
 		}
 		if current.Right != nil {
-			queue.Unshift(&current.Right)
+			queue.Push(current.Right)
 		}
 		if current.Left != nil {
-			queue.Unshift(&current.Left)
+			queue.Push(current.Left)
 		}
 	}
 	return false

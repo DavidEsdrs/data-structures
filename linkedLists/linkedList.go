@@ -12,9 +12,8 @@ type LinkedList[T any] struct {
 	Size uint
 }
 
-func NewLinkedList[T any]() *LinkedList[T] {
-	ll := LinkedList[T]{Head: nil, Size: 0}
-	return &ll
+func NewLinkedList[T any]() LinkedList[T] {
+	return LinkedList[T]{Head: nil, Size: 0}
 }
 
 func FromArray[T any](arr []T) *LinkedList[T] {
@@ -51,7 +50,7 @@ func (ll *LinkedList[T]) Prepend(value T) {
 // Remove an item at given index - returns an error if it don't succed
 func (ll *LinkedList[T]) RemoveAtIndex(index int) error {
 	if index > int(ll.Size) {
-		return fmt.Errorf("index out of range - given index " + fmt.Sprint(index) + " to list of Size " + fmt.Sprint(ll.Size))
+		return fmt.Errorf("index out of range - given index %v to list of size %v", fmt.Sprint(index), fmt.Sprint(ll.Size))
 	}
 	if index < 0 || ll.Head == nil {
 		return fmt.Errorf("invalid index or empty list")
@@ -74,7 +73,7 @@ func (ll *LinkedList[T]) RemoveAtIndex(index int) error {
 		current = current.Next
 		count++
 	}
-	return fmt.Errorf("index out of range - given index " + fmt.Sprint(index) + " to list of Size " + fmt.Sprint(ll.Size))
+	return fmt.Errorf("index out of range - given index %v to list of size %v", fmt.Sprint(index), fmt.Sprint(ll.Size))
 }
 
 func (ll *LinkedList[T]) TraverseIterate() {

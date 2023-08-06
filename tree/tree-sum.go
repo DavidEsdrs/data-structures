@@ -15,15 +15,15 @@ func Sum(root *Node[int]) int {
 	}
 	res := 0
 	q := queue.Queue[*Node[int]]{}
-	q.Unshift(&root)
+	q.Push(root)
 	for q.Size > 0 {
 		current := *q.Shift()
 		res += current.Value
 		if current.Left != nil {
-			q.Unshift(&current.Left)
+			q.Push(current.Left)
 		}
 		if current.Right != nil {
-			q.Unshift(&current.Right)
+			q.Push(current.Right)
 		}
 	}
 	return res

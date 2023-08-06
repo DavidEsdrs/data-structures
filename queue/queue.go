@@ -1,18 +1,19 @@
 package queue
 
 type Queue[T any] struct {
-	_nodes []*T
+	_nodes []T
 	Size   uint
 }
 
-func (q *Queue[T]) Unshift(n *T) {
+func (q *Queue[T]) Push(n T) {
 	q._nodes = append(q._nodes, n)
 	q.Size++
 }
 
-func (q *Queue[T]) Shift() *T {
+func (q *Queue[T]) Shift() T {
+	var zeroValue T
 	if q.Size == 0 {
-		return nil
+		return zeroValue
 	}
 	first := q._nodes[0]
 	q._nodes = q._nodes[1:]
