@@ -30,17 +30,39 @@ func (g *Graph[T]) HasPath(source T, dest T) bool {
 	return false
 }
 
-func (g *Graph[T]) HasPathRecursive(source T, dest T) bool {
-	return recurse(g, source, dest)
+type CompareFunction[T comparable] func(a T, b T) bool
+
+func (g *Graph[T]) HasPathWithCompare(source T, dest T, compareFunction CompareFunction[T]) bool {
+	stack := stacks.Stack[T]{}
+	_, exists := g.Map[source]
+	if !exists {
+		return false
+	}
+	visited := sets.NewSet[T, bool]()
+	stack.Push(source)
+	for stack.Size > 0 {
+		current := stack.Pop()
+		if !visited.Has(current) {
+			if compareFunction(current, dest) {
+				return true
+			}
+			visited.Add(current, true)
+			neighbours := g.Map[current]
+			for _, n := range neighbours {
+				stack.Push(n)
+			}
+		}
+	}
+	return false
 }
 
-func recurse[T comparable](graph *Graph[T], source T, dest T) bool {
+func (g *Graph[T]) HasPathRecursive(source T, dest T) bool {
 	if source == dest {
 		return true
 	}
-	neighbours := graph.Map[source]
+	neighbours := g.Map[source]
 	for _, n := range neighbours {
-		if recurse(graph, n, dest) {
+		if g.HasPathRecursive(n, dest) {
 			return true
 		}
 	}

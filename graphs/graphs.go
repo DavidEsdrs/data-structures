@@ -29,9 +29,23 @@ func (g *Graph[T]) CreateEdge(key T, to ...T) {
 	for _, str := range to {
 		_, exists := g.Map[str]
 		if !exists {
-			panic("node doesn't exist")
+			g.Insert(str)
 		}
 		g.Map[key] = append(g.Map[key], str)
+	}
+}
+
+func (g *Graph[T]) CreateEdgeBidirectional(key T, to ...T) {
+	if _, exists := g.Map[key]; !exists {
+		g.Map[key] = []T{}
+	}
+	for _, str := range to {
+		_, exists := g.Map[str]
+		if !exists {
+			g.Insert(str)
+		}
+		g.Map[key] = append(g.Map[key], str)
+		g.Map[str] = append(g.Map[str], key)
 	}
 }
 
@@ -77,13 +91,33 @@ func (g *Graph[T]) BreadthFirst(start T, cb Callback[T]) {
 	if !exists {
 		panic("Root not found")
 	}
+	set := sets.NewSet[T, bool]()
 	queue.Push(start)
 	for queue.Size > 0 {
 		current := queue.Shift()
-		cb(current)
-		edges := g.Map[current]
-		for _, neighbor := range edges {
-			queue.Push(neighbor)
+		if !set.Has(current) {
+			cb(current)
+			edges := g.Map[current]
+			for _, neighbor := range edges {
+				queue.Push(neighbor)
+			}
+		}
+	}
+}
+
+func DepthFirst[T comparable](g *Graph[T], start T) {
+	stack := stacks.Stack[T]{}
+	stack.Push(start)
+	visited := sets.NewSet[T, bool]()
+	for stack.Size > 0 {
+		current := stack.Pop()
+		if !visited.Has(current) {
+			visited.Add(current, true)
+			println(current)
+			neighbours := g.Map[current]
+			for _, n := range neighbours {
+				stack.Push(n)
+			}
 		}
 	}
 }
